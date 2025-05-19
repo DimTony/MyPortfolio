@@ -56,3 +56,4 @@ export interface ContactFormData {
 
 
 export type Theme = "light" | "dark" | "system";
+export type ProjectTab = "projects" | "thinktank";

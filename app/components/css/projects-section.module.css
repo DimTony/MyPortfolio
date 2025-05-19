@@ -1,0 +1,77 @@
+/* ProjectsSection.module.css */
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+  }
+  
+  .blueBackground {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #5b7bc7; /* Adjust the blue color to match your image */
+    z-index: 1;
+  }
+  
+  .peachSection {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 70%;
+    height: 50%;
+    background-color: #ffcba3; /* Adjust this peach/orange color to match your image */
+    border-radius: 0 0 0 30%;
+    z-index: 2;
+  }
+  
+  .whiteCard {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    width: 90%;
+    height: 70%;
+    background-color: white;
+    border-radius: 20px;
+    transform: rotate(-5deg); /* Adjust the tilt to match your design */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+  }
+  
+  .sectionTitle {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #333;
+    z-index: 4;
+  }
+  
+  .carouselWrapper {
+    position: absolute;
+    width: 295px;
+    height: 100%;
+    /* z-index: 5; */
+    transform: translate(77px, 43px) rotate(-30.8deg);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .peachSection {
+      width: 90%;
+      height: 40%;
+    }
+    
+    .whiteCard {
+      height: 80%;
+      padding: 20px;
+    }
+    
+    .sectionTitle {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+  }

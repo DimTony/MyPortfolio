@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "../public/css/theme-toggle.css";
 import Providers from "./providers";
-import ClientThemeInitializer from "./components/ClientThemeInitializer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,13 +20,14 @@ export const metadata: Metadata = {
 };
 
 
+// app/layout.tsx
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/images/logoo.svg" />
         <link href="https://fonts.cdnfonts.com/css/effra" rel="stylesheet" />
@@ -35,10 +35,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* <Providers> */}
-        <ClientThemeInitializer />
-        {children}
-        {/* </Providers> */}
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

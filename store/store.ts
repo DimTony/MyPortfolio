@@ -1,13 +1,18 @@
 "use client";
 
-import { Theme } from "@/types";
+import { ProjectTab, Theme } from "@/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
 
 interface AppState {
   theme: Theme;
   setTheme: (theme: Theme) => void;
+
+  activeTab: ProjectTab;
+  setActiveTab: (tab: ProjectTab) => void;
+
+  selectedProject: any | null;
+  setSelectedProject: (tab: any | null) => void;
 }
 
 export const useStore = create<AppState>()(
@@ -15,6 +20,12 @@ export const useStore = create<AppState>()(
     (set) => ({
       theme: "system",
       setTheme: (theme) => set({ theme }),
+
+      activeTab: "projects",
+      setActiveTab: (tab) => set({ activeTab: tab }),
+
+      selectedProject: null,
+      setSelectedProject: (project) => set({ selectedProject: project }),
     }),
     {
       name: "theme-storage",

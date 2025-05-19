@@ -17,7 +17,14 @@ import Menu from "./sections/Menu";
 export default function Home() {
   return (
     <>
-      <div className="bg-black-100">
+      <div
+        // className=""
+        
+        style={{
+          backgroundColor: "var(--pagebackground)",
+          color: "var(--foreground)",
+        }}
+      >
         {/* <Loader />
         <NavBar />
         <SideBar /> */}

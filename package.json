@@ -1,16 +1,15 @@
 {
   "name": "portfolio",
   "version": "0.1.0",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
-  "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  },
+  
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@gsap/react": "^2.1.2",
@@ -48,7 +47,7 @@
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20.17.48",
+    "@types/node": "^20.17.49",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

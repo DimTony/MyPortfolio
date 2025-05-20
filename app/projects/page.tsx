@@ -280,7 +280,7 @@ export default function ProjectsPage() {
                 >
                   <span>Projects</span>
                 </button>
-                <button
+                {/* <button
                   onClick={() => handleTabChange("thinktank")}
                   style={{
                     color:
@@ -295,7 +295,7 @@ export default function ProjectsPage() {
                   className="cursor-pointer rounded-[8px] px-2 py-1"
                 >
                   <span>ThinkTank</span>
-                </button>
+                </button> */}
               </div>
 
               {/* Projects container with scrolling if needed */}

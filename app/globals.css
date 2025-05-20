@@ -218,6 +218,11 @@
   padding: 4px;
 }
 
+section[aria-label="Notifications alt+T"] {
+  display: none !important;
+}
+
+
 textarea {
   resize: none;
 }

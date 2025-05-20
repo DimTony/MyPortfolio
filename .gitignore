@@ -19,6 +19,8 @@
 
 /seeder
 
+/prisma/seed.ts
+
 # production
 /build
 

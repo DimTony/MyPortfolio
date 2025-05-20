@@ -106,7 +106,7 @@ export default function LoginForm() {
             </form>
 
             <div className="mt-4 text-sm text-center text-gray-600">
-                <p>Demo credentials: admin@example.com / admin123</p>
+                {/* <p>Demo credentials: admin@example.com / admin123</p> */}
             </div>
         </div>
     );

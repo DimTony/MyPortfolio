@@ -43,7 +43,7 @@ const Menu = () => {
             className="col-span-1 z-12 md:col-span-2 h-64   text-2xl font-bold rounded-3xl transition-transform duration-300 ease-in hover:translate-y-[-5px] shadow-[var(--box-shadow-v)] hover:cursor-pointer"
             style={{
               backgroundColor: "var(--background)",
-              color: "var(--foreground)",
+              color: "var(--resume-foreground)",
             }}
           >
             <Link
@@ -228,7 +228,13 @@ const Menu = () => {
             className="col-span-1 h-64 z-10 flex  justify-center items-center text-2xl font-bold rounded-3xl transition-transform duration-300 ease-in hover:translate-y-[-5px] shadow-[var(--box-shadow-v)]  hover:cursor-pointer"
           >
             <div className="flex flex-col items-center gap-3">
-              Blog
+              <span
+                style={{
+                  color: "var(--resume-foreground)",
+                }}
+              >
+                Blog
+              </span>
               <span
                 style={{
                   backgroundColor: "rgba(var(--resume-background-rgb), 0.25)",

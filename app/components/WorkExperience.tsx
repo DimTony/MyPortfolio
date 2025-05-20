@@ -91,20 +91,20 @@ const WorkExperience = () => {
     >
       <div className="w-fit p-4 rounded-br-[12px] border-gray-200 dark:border-gray-700 bg-opacity-90 backdrop-blur-sm">
         {/* <h2 className="text-2xl font-bold text-center">Experience</h2> */}
-         <span
-        style={{
-          backgroundColor: "rgba(var(--resume-background-rgb), 0.25)",
-          color: "var(--resume-foreground)",
-          backdropFilter: "blur(10px)",
-          border: "1px solid rgba(255, 255, 255, 0.125)",
-          boxShadow:
-            "0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
-          transition: "all 0.3s ease",
-        }}
-        className="px-4 w-fit z-20 relative top-[5%] left-[5%] py-2 rounded-full font-medium"
-      >
-        Experience
-      </span>
+        <span
+          style={{
+            backgroundColor: "rgba(var(--resume-background-rgb), 0.25)",
+            color: "var(--resume-foreground)",
+            backdropFilter: "blur(10px)",
+            border: "1px solid rgba(255, 255, 255, 0.125)",
+            boxShadow:
+              "0 4px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
+            transition: "all 0.3s ease",
+          }}
+          className="px-4 w-fit z-20 relative top-[5%] left-[5%] py-2 rounded-full font-medium"
+        >
+          Experience
+        </span>
       </div>
 
       <div className="relative h-[calc(100%-60px)]">
@@ -120,8 +120,6 @@ const WorkExperience = () => {
             background: var(--experience-lin-g-bg);
             transition: opacity 0.3s ease;
           }
-
-         
         `}</style>
 
         <div
@@ -135,14 +133,40 @@ const WorkExperience = () => {
               key={index}
               className="mb-6 last:mb-2 transition-all duration-200 hover:bg-opacity-10 hover:bg-gray-500 p-3 rounded-lg"
             >
-              <h3 className="text-lg font-semibold">{exp.title}</h3>
+              <h3
+                className="text-lg font-semibold"
+                style={{
+                  color: "var(--resume-foreground)",
+                }}
+              >
+                {exp.title}
+              </h3>
               <div className="flex justify-between items-center mt-1">
-                <span className="text-sm font-medium">{exp.company}</span>
-                <span className="text-xs text-gray-500 dark:text-gray-400">
+                <span
+                  style={{
+                    color: "var(--resume-foreground)",
+                  }}
+                  className="text-sm font-medium"
+                >
+                  {exp.company}
+                </span>
+                <span
+                  style={{
+                    color: "var(--resume-foreground)",
+                  }}
+                  className="text-xs text-gray-500 dark:text-gray-400"
+                >
                   {exp.period}
                 </span>
               </div>
-              <p className="mt-2 text-sm">{exp.description}</p>
+              <p
+                style={{
+                  color: "var(--resume-foreground)",
+                }}
+                className="mt-2 text-sm"
+              >
+                {exp.description}
+              </p>
             </div>
           ))}
         </div>

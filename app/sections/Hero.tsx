@@ -27,7 +27,7 @@ const Hero = () => {
             <p
               style={{
                 // backgroundColor: "var(--background)",
-                color: "var(--foreground)",
+                color: "var(--resume-foreground)",
               }}
               className="font md:text-2xl text-base"
             >
@@ -36,7 +36,7 @@ const Hero = () => {
             <h1
               style={{
                 // backgroundColor: "var(--background)",
-                color: "var(--foreground)",
+                color: "var(--resume-foreground)",
               }}
               className="font-bold md:text-8xl text-4xl"
             >
@@ -46,7 +46,7 @@ const Hero = () => {
               className="font-bold md:text-9xl text-5xl"
               style={{
                 // backgroundColor: "var(--background)",
-                color: "var(--foreground)",
+                color: "var(--resume-foreground)",
               }}
             >
               SOFTWARE
@@ -59,7 +59,7 @@ const Hero = () => {
                   className="md:text-base text-xs"
                   style={{
                     // backgroundColor: "var(--background)",
-                    color: "var(--foreground)",
+                    color: "var(--resume-foreground)",
                   }}
                 >
                   Explore
@@ -78,7 +78,7 @@ const Hero = () => {
                   className="font-bold md:text-9xl text-5xl"
                   style={{
                     // backgroundColor: "var(--background)",
-                    color: "var(--foreground)",
+                    color: "var(--resume-foreground)",
                   }}
                 >
                   ENGINEER

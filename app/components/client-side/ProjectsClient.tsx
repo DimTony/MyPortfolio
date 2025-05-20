@@ -1,62 +1,34 @@
 "use client";
 
+import React, { useEffect, useRef, useState } from "react";
 import { useStore } from "@/store/store";
-import MarqueeComponent from "../components/Marquee";
-import Layout from "../components/Layout";
-import Card from "../components/Card";
-import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import Image from "next/image";
+import { X } from "lucide-react";
+import { fetchProjectsData } from "@/app/projects/_actions/projects";
+import { Objective, Project } from "@/types";
+import Layout from "../Layout";
+import Card from "../Card";
+import MarqueeComponent from "../Marquee";
 import { formatDateToMonthYear } from "@/lib/utils";
-import CommentList from "../components/CommentList";
-import CommentForm from "../components/CommentForm";
-import { ProjectTab } from "@/types";
-
-type Objective = {
-  id: number;
-  text: string;
-  descriptionId: number;
-};
-
-type ProjectDescription = {
-  id: number;
-  title: string;
-  summary: string;
-  footer: string;
-  objectives: Objective[];
-};
-
-type Project = {
-  id: number;
-  title: string;
-  description: string;
-  technologies: string | string[]; // Can be string (JSON) or parsed array
-  role: string;
-  dash: string;
-  thumbnail: string;
-  releaseStatus: string;
-  maintainStatus: string;
-  date: string;
-  githubUrl?: string;
-  demoUrl?: string;
-  desc?: ProjectDescription;
-  descId?: number;
-  comments?: any[];
-};
+import CommentForm from "../CommentForm";
+import CommentList from "../CommentList";
 
 const ProjectItem = ({ project }: { project: Project }) => {
-  const { selectedProject, setSelectedProject } = useStore();
+  const { setSelectedProject } = useStore();
 
   // Parse technologies if it's a string
   const technologies = typeof project.technologies === 'string'
     ? JSON.parse(project.technologies)
     : project.technologies;
 
-  const isSelected = selectedProject && selectedProject.id === project.id;
-
   return (
     <div
       onClick={() => setSelectedProject(project)}
-      className={`hover:cursor-pointer hover:scale-102 p-[1rem] 
-        ${isSelected ? 'glass-card rounded-md' : ''}`}
+      className="hover:cursor-pointer hover:scale-102 py-[1rem]"
     >
       <div className="flex gap-2">
         <div className="w-[40%] h-[6rem] rounded-[8px] glass-card">
@@ -85,7 +57,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
           <MarqueeComponent>
             {technologies.map((tech: string, index: number) => (
               <span
-                key={`tech-${index}-${project.id}`}
+                key={index}
                 className="text-[10px] text-[var(--text-color-ccc)] px-2 py-[2px] border rounded-full"
               >
                 {tech}
@@ -98,7 +70,7 @@ const ProjectItem = ({ project }: { project: Project }) => {
   );
 };
 
-// Project item skeleton for loading state
+// First, let's create a ProjectItemSkeleton component
 const ProjectItemSkeleton = () => {
   return (
     <div className="py-[1rem]">
@@ -126,93 +98,67 @@ const ProjectItemSkeleton = () => {
   );
 };
 
-export default function ProjectsPage() {
-  // Get all required state and actions from the store
-  const { activeTab, selectedProject, setActiveTab, setSelectedProject } = useStore();
-
-  // Local state for projects and thinktank data
+const ProjectsClient = ({
+  initialData,
+}: {
+  initialData: any;
+}) => {
+  const { data: session, status } = useSession();
+  const { activeTab, selectedProject, setActiveTab } =
+    useStore();
   const [projects, setProjects] = useState<Project[]>([]);
-  const [thinktankData, setThinktankData] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
+  const [date, setDate] = useState("");
+  const [open, setOpen] = useState(false);
+  const initializedRef = useRef(false);
 
-  // Helper function for comments
-  function getRandomString(): string {
-    const options = [
-      "/images/user1.svg",
-      "/images/user2.svg",
-      "/images/user3.svg",
-      "/images/user1.svg",
-      "/images/user2.svg",
-    ];
-    const randomIndex = Math.floor(Math.random() * options.length);
-    return options[randomIndex];
+
+ useEffect(() => {
+  if (
+    !initializedRef.current &&
+    initialData &&
+    initialData.length > 0
+  ) {
+    setProjects(initialData); // Changed from initialData.data to initialData
+    initializedRef.current = true;
   }
+}, [initialData, setProjects]);
 
-  // Handle tab changes properly with the store
-  const handleTabChange = (tab: ProjectTab) => {
-    // Important: Set selectedProject to null before changing the tab
-    setSelectedProject(null);
-    setActiveTab(tab);
+  //   useEffect(() => {
+  //     console.log("llll", paginatedData);
+  //   }, [paginatedData]);
+
+  const handleViewDetails = (item: any) => {
+    // setSelectedFee(item);
+    setOpen(true);
   };
 
-  // Fetch projects or thinktank data when needed
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      
-      try {
-        if (activeTab === "projects") {
-          const response = await fetch('/api/projects');
-          if (!response.ok) throw new Error('Failed to fetch projects');
-          const data = await response.json();
-          setProjects(data);
-          
-          // Select first project if none is selected
-          if (!selectedProject && data.length > 0) {
-            setSelectedProject(data[0]);
-          }
-        } else if (activeTab === "thinktank") {
-          const response = await fetch('/api/thinktanks');
-          if (!response.ok) throw new Error('Failed to fetch thinktank data');
-          const data = await response.json();
-          setThinktankData(data);
-          
-          // Select first thinktank project if none is selected
-          if (!selectedProject && data.length > 0) {
-            setSelectedProject(data[0]);
-          }
-        }
-      } catch (error) {
-        console.error(`Error fetching ${activeTab} data:`, error);
-      } finally {
-        setLoading(false);
+  const toggleDrawer =
+    (state: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event.type === "keydown" &&
+        ((event as React.KeyboardEvent).key === "Tab" ||
+          (event as React.KeyboardEvent).key === "Shift")
+      ) {
+        return;
       }
+      setOpen(state);
     };
 
-    fetchData();
-  }, [activeTab, setSelectedProject]);
+  const displayedProject = selectedProject || (projects.length > 0 ? projects[0] : null);
+    
 
-  // Get the appropriate data based on the active tab
-  const currentProjects = activeTab === "projects" ? projects : thinktankData;
-
-  // Parse technologies if needed for display
-  const parseTechnologies = (tech: string | string[]): string[] => {
-    if (typeof tech === 'string') {
-      try {
-        return JSON.parse(tech);
-      } catch (e) {
-        console.error("Failed to parse technologies:", e);
-        return [];
-      }
-    }
-    return tech;
-  };
+  const isDataAvailable =
+    !loading && projects && projects.length > 0;
 
   return (
-    <Layout>
+  <Layout>
       <Card className="w-full h-full no-scrollbar">
         <div className="pt-[6rem] pb-[2rem] px-[2rem] w-full h-full flex flex-col no-scrollbar ">
           <div className="w-full gap-[1rem] z-10 flex no-scrollbar mb-6">
+
+
             <div className="w-[70%] h-[26rem] rounded-[8px] ">
               {loading ? (
                 // Skeleton for the main project display
@@ -220,13 +166,13 @@ export default function ProjectsPage() {
                   <div className="h-[calc(100%-3rem)] w-full bg-gray-300 rounded-[8px] animate-pulse"></div>
                   <div className="w-full h-[2rem] bg-gray-300 rounded-[8px] mt-2 animate-pulse"></div>
                 </div>
-              ) : selectedProject ? (
+              ) : displayedProject ? (
                 // Original display project content
                 <div className="h-full flex flex-col justify-between px-[1rem]">
                   <div className="h-full flex flex-col justify-between px-[1rem]">
                     <div className="">
                       <img
-                        src={selectedProject.dash || "/images/placeholder.png"}
+                        src={displayedProject.dash || "/images/placeholder.png"}
                         alt="thumbnail"
                         className="h-full object-contain border-2 border-gray-300 rounded-[8px] overflow-hidden"
                       />
@@ -245,7 +191,7 @@ export default function ProjectsPage() {
                         }}
                         className="px-4 py-2 rounded-[8px] w-full font-medium"
                       >
-                        {selectedProject.title}
+                        {displayedProject.title}
                       </span>
                     </div>
                   </div>
@@ -262,10 +208,10 @@ export default function ProjectsPage() {
                 </div>
               )}
             </div>
-            <div className="w-[35%] flex flex-col">
+            <div className="w-[30%] flex flex-col">
               <div className="flex px-3 items-center gap-2">
                 <button
-                  onClick={() => handleTabChange("projects")}
+                  onClick={() => setActiveTab("projects")}
                   style={{
                     color:
                       activeTab === "projects"
@@ -278,10 +224,11 @@ export default function ProjectsPage() {
                   }}
                   className="cursor-pointer rounded-[8px] px-2 py-1"
                 >
+                  {/* <span>{displayedProject.dash}</span> */}
                   <span>Projects</span>
                 </button>
-                {/* <button
-                  onClick={() => handleTabChange("thinktank")}
+                <button
+                  onClick={() => setActiveTab("thinktank")}
                   style={{
                     color:
                       activeTab === "thinktank"
@@ -295,11 +242,11 @@ export default function ProjectsPage() {
                   className="cursor-pointer rounded-[8px] px-2 py-1"
                 >
                   <span>ThinkTank</span>
-                </button> */}
+                </button>
               </div>
 
               {/* Projects container with scrolling if needed */}
-              <div className="mt-2 p-2 max-h-[24rem] overflow-y-auto no-scrollbar">
+              <div className="mt-2 px-3 max-h-[24rem] overflow-y-auto no-scrollbar">
                 {loading ? (
                   // Show skeletons while loading
                   Array(4).fill(0).map((_, index) => (
@@ -307,54 +254,54 @@ export default function ProjectsPage() {
                   ))
                 ) : (
                   // Show actual projects when loaded
-                  currentProjects.map((project: Project) => (
-                    <ProjectItem key={`project-${project.id}-${activeTab}`} project={project} />
+                  projects.map((project: any) => (
+                    <ProjectItem key={project.id} project={project} />
                   ))
                 )}
               </div>
             </div>
           </div>
 
-          {selectedProject && (
+          {displayedProject && (
             <div className="w-full flex gap-[2rem] z-10">
               <div className="glass-card px-[1rem] py-[1rem] rounded-[8px] w-[70%] no-scrollbar">
                 <div className="flex items-center gap-3 mb-[1rem]">
                   <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${selectedProject.releaseStatus === "Beta-released"
+                    className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${displayedProject.releaseStatus === "Beta-released"
                       ? "bg-[#F3F0FF] text-[#6941C6] border border-[#D9D6FE]" // Plum/Purple
-                      : selectedProject.releaseStatus === "Pilot-released"
+                      : displayedProject.releaseStatus === "Pilot-released"
                         ? "bg-[#E0F2FE] text-[#0369A1] border border-[#BAE6FD]" // Sky blue
-                        : selectedProject.releaseStatus === "Inactive"
+                        : displayedProject.releaseStatus === "Inactive"
                           ? "bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]" // Amber
-                          : selectedProject.releaseStatus === "Active"
+                          : displayedProject.releaseStatus === "Active"
                             ? "bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]" // Indigo
-                            : selectedProject.releaseStatus === "In-development"
+                            : displayedProject.releaseStatus === "In-progress"
                               ? "bg-[#FAE8FF] text-[#9333EA] border border-[#E9D5FF]" // Violet
-                              : selectedProject.releaseStatus === "Production"
+                              : displayedProject.releaseStatus === "Production"
                                 ? "bg-[#ECFEFF] text-[#0E7490] border border-[#A5F3FC]" // Cyan
-                                : selectedProject.releaseStatus === "Testing"
+                                : displayedProject.releaseStatus === "Testing"
                                   ? "bg-[#FDF2FA] text-[#C026D3] border border-[#FBCFE8]" // Fuchsia
-                                  : selectedProject.releaseStatus === "Deprecated"
+                                  : displayedProject.releaseStatus === "Deprecated"
                                     ? "bg-[#F1F5F9] text-[#475569] border border-[#CBD5E1]" // Cool Gray
-                                    : selectedProject.releaseStatus === "On-hold"
+                                    : displayedProject.releaseStatus === "On-hold"
                                       ? "bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE]" // Deep Purple
                                       : "bg-gray-100 text-gray-600 border border-gray-300"
                       }`}
                   >
-                    {selectedProject.releaseStatus}
+                    {displayedProject.releaseStatus}
                   </span>
 
                   <span
-                    className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${selectedProject.maintainStatus === "Deprecated"
+                    className={`px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap ${displayedProject.maintainStatus === "Deprecated"
                       ? "bg-[#FEF3F2] text-[#B42318] border border-[#FECDCA]"
-                      : selectedProject.maintainStatus === "Maintained"
+                      : displayedProject.maintainStatus === "Maintained"
                         ? "bg-[#ECFDF3] text-[#067647] border border-[#ABEFC6]"
-                        : selectedProject.maintainStatus === "Deprecated"
+                        : displayedProject.maintainStatus === "Under-development"
                           ? "bg-[#FDF4FF] text-[#A21CAF] border border-[#F5D0FE]"
                           : "bg-gray-100 text-gray-600 border border-gray-300"
                       }`}
                   >
-                    {selectedProject.maintainStatus}
+                    {displayedProject.maintainStatus}
                   </span>
 
                   <span
@@ -362,26 +309,26 @@ export default function ProjectsPage() {
                       color: "var(--foreground-neg)",
                     }}
                   >
-                    {formatDateToMonthYear(selectedProject.date)}
+                    {formatDateToMonthYear(displayedProject.date)}
                   </span>
                 </div>
 
-                {selectedProject.desc ? (
+                {displayedProject.desc ? (
                   <div>
                     <h2 className="text-2xl font-bold mb-4">
-                      {selectedProject.desc.title}
+                      {displayedProject.desc.title}
                     </h2>
-                    <p className="mb-4">{selectedProject.desc.summary}</p>
+                    <p className="mb-4">{displayedProject.desc.summary}</p>
 
-                    {selectedProject.desc.objectives && selectedProject.desc.objectives.length > 0 && (
+                    {displayedProject.desc.objectives && displayedProject.desc.objectives.length > 0 && (
                       <ul className="list-disc list-inside space-y-2">
-                        {selectedProject.desc.objectives.map((obj: Objective, index: number) => (
-                          <li key={`obj-${obj.id || index}`}>{obj.text}</li>
+                        {displayedProject.desc.objectives.map((obj: Objective, index: any) => (
+                          <li key={index}>{obj.text}</li>
                         ))}
                       </ul>
                     )}
 
-                    <p className="mt-4">{selectedProject.desc.footer}</p>
+                    <p className="mt-4">{displayedProject.desc.footer}</p>
                   </div>
                 ) : (
                   <div>
@@ -397,16 +344,102 @@ export default function ProjectsPage() {
                 >
                   Comments
                 </span>
-                
-                {selectedProject && (
+                {/* <div className="glass-card rounded-[8px] w-full p-[1rem] no-scrollbar">
+                  <div className="w-full flex flex-col gap-4 p-[.5rem]">
+                    <div className="flex items-center gap-2">
+                      <img
+                        src={getRandomString()}
+                        alt="visitor"
+                        className="w-5 h-5"
+                      />
+                      <input
+                        type="text"
+                        placeholder="Enter your name"
+                        className="h-[1rem] px-2 py-3 text-[.8rem] focus:outline-none rounded-[4px]"
+                        style={{
+                          background: "var(--neg-back)",
+                          color: "var(--input-color)",
+                        }}
+                      />
+                    </div>
+
+                    <textarea
+                      placeholder="Enter comment..."
+                      className="min-h-[5rem] p-1 text-[13px] focus:outline-none focus:border-[#6886c5] w-full border-b-1 border-[#888] rounded-[8px]"
+                      style={{
+                        color: "var(--input-color)",
+                      }}
+                    />
+
+                    <div className="w-full flex justify-end">
+                      <button className="glass-card rounded-[8px] px-2 py-1 cursor-pointer hover:scale-103 ">
+                        <span className="text-[12px]">Comment</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="glass-card rounded-[8px] w-full max-h-[25rem] p-[1rem] overflow-auto no-scrollbar">
+                  <div>
+                    {[
+                      {
+                        sender: "Jane Doe",
+                        comment: "Awesome Stuff!",
+                      },
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                      {},
+                    ].map((notif, idx) => (
+                      <div
+                        key={idx}
+                        className="w-full border-y border-[var(--glassmorph-nav-border)] rounded-[8px] flex flex-col gap-4 p-[.5rem]"
+                      >
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={getRandomString()}
+                            alt="visitor"
+                            className="w-5 h-5"
+                          />
+                          <span
+                            style={{
+                              color: "var(--resume-foreground)",
+                            }}
+                            className="text-[.8rem]"
+                          >
+                            Jane Doe
+                          </span>
+                        </div>
+
+                        <span
+                          style={{
+                            color: "var(--resume-foreground)",
+                          }}
+                          className="text-[.8rem]"
+                        >
+                          Awesome stuff!
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div> */}
+
+                {displayedProject && (
                   <>
-                    <CommentForm projectId={selectedProject.id} />
+                    <CommentForm projectId={displayedProject.id} />
                   </>
                 )}
 
-                {selectedProject.comments && (
+                {displayedProject.comments && (
                   <>
-                    <CommentList comments={selectedProject.comments} />
+                    <CommentList comments={displayedProject.comments} />
                   </>
                 )}
               </div>
@@ -416,4 +449,6 @@ export default function ProjectsPage() {
       </Card>
     </Layout>
   );
-}
+};
+
+export default ProjectsClient;

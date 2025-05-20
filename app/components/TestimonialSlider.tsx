@@ -139,7 +139,7 @@ const TestimonialSlider = () => {
 
           <p
             style={{
-              color: "var(--foreground)",
+              color: "var(--resume-foreground)",
             }}
             className="text-[14px] w-full h-full flex items-center justify-center font-[300] leading-relaxed"
           >
@@ -157,7 +157,7 @@ const TestimonialSlider = () => {
           <div>
             <h3
               style={{
-                color: "var(--foreground)",
+                color: "var(--resume-foreground)",
               }}
               className="text-[16px] font-bold"
             >
@@ -165,7 +165,7 @@ const TestimonialSlider = () => {
             </h3>
             <p
               style={{
-                color: "var(--foreground)",
+                color: "var(--resume-foreground)",
               }}
               className="text-emerald-200 text-[14px]"
             >

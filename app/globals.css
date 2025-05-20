@@ -196,7 +196,7 @@
   --glassmorph-active-glow: 0 0 15px rgba(124, 58, 237, 0.6);
   --glassmorph-active-bg: rgba(124, 58, 237, 0.15);
   --glassmorph-page-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  --glass-neon-active-color: #86c3d7;
+  --glass-neon-active-color: #0a0a0a;
   --glass-neon-active-ts1: 0 0 10px rgba(134, 195, 215, 0.7);
   --glass-neon-active-ts2: 0 0 40px rgba(134, 195, 215, 0.7);
   --glass-neon-active-ts3: 0 0 100px rgba(134, 195, 215, 0.7);
@@ -211,6 +211,11 @@
 
 .dark {
   --text-color-ccc: #f5f5f5; /* dark mode */
+}
+
+.i-f-color {
+  color: var(--resume-foreground);
+  padding: 4px;
 }
 
 textarea {

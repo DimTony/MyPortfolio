@@ -2,15 +2,10 @@ import { notFound } from "next/navigation";
 import ProjectForm from "../../ProjectForm";
 import prisma from "@/lib/prisma";
 
-interface EditProjectPageParams {
-  params: {
-    id: string;
-  };
-}
 
 export default async function EditProjectPage({
   params,
-}: EditProjectPageParams) {
+}: any) {
   // Convert id to number since params come as strings from the URL
   const projectId = parseInt(params.id, 10);
   

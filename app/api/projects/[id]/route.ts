@@ -41,7 +41,7 @@ interface ProjectData {
 // Get a specific project by ID
 export async function GET(
   request: NextRequest, 
-  { params }: RouteParams
+  { params }: any
 ): Promise<NextResponse> {
   try {
     const id = parseInt(params.id);
@@ -83,7 +83,7 @@ export async function GET(
 // Update a project
 export async function PUT(
   request: NextRequest, 
-  { params }: RouteParams
+  { params }: any
 ): Promise<NextResponse> {
   try {
     const id = parseInt(params.id);
@@ -209,7 +209,7 @@ export async function PUT(
 // Delete a project
 export async function DELETE(
   request: NextRequest, 
-  { params }: RouteParams
+  { params }: any
 ): Promise<NextResponse> {
   try {
     const id = parseInt(params.id);

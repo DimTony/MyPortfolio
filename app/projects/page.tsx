@@ -328,7 +328,7 @@ export default function ProjectsPage() {
                           ? "bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]" // Amber
                           : selectedProject.releaseStatus === "Active"
                             ? "bg-[#EFF6FF] text-[#1D4ED8] border border-[#BFDBFE]" // Indigo
-                            : selectedProject.releaseStatus === "In-progress"
+                            : selectedProject.releaseStatus === "In-development"
                               ? "bg-[#FAE8FF] text-[#9333EA] border border-[#E9D5FF]" // Violet
                               : selectedProject.releaseStatus === "Production"
                                 ? "bg-[#ECFEFF] text-[#0E7490] border border-[#A5F3FC]" // Cyan
@@ -349,7 +349,7 @@ export default function ProjectsPage() {
                       ? "bg-[#FEF3F2] text-[#B42318] border border-[#FECDCA]"
                       : selectedProject.maintainStatus === "Maintained"
                         ? "bg-[#ECFDF3] text-[#067647] border border-[#ABEFC6]"
-                        : selectedProject.maintainStatus === "Under-development"
+                        : selectedProject.maintainStatus === "Deprecated"
                           ? "bg-[#FDF4FF] text-[#A21CAF] border border-[#F5D0FE]"
                           : "bg-gray-100 text-gray-600 border border-gray-300"
                       }`}

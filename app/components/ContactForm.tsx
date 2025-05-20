@@ -3,7 +3,8 @@ import { useForm } from "react-hook-form";
 import * as Z from "zod";
 import emailjs from "@emailjs/browser";
 import { useState } from "react";
-import { serviceID, templateID, userID } from "../api/_services/mock.service";
+import { getServiceID, getTemplateID, getUserID } from "../api/_services/mock.service";
+// import { serviceID, templateID, userID } from "../api/_services/mock.service";
 
 const contactFormSchema = Z.object({
   name: Z.string().nonempty("Name is required"),
@@ -31,7 +32,12 @@ const ContactForm = () => {
     resolver: zodResolver(contactFormSchema),
   });
 
+  const serviceID = getServiceID()
+  const templateID = getTemplateID()
+  const userID = getUserID()
+
   const onSubmit = async (data: any) => {
+
     setLoading(true);
     try {
       const payload = {
@@ -42,7 +48,7 @@ const ContactForm = () => {
         subject: data.subject,
       };
 
-      if (serviceID && templateID) {
+      if (serviceID && typeof (serviceID) === 'string' && templateID && typeof (templateID) === 'string' && userID && typeof (userID) === 'string') {
         await emailjs.send(serviceID, templateID, payload, {
           publicKey: userID,
         });

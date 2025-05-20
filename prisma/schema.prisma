@@ -109,7 +109,14 @@ model ThinkTankComment {
   thinkTankId Int
 }
 
-
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  message   String   @db.Text
+  createdAt DateTime @default(now())
+  emailSent Boolean  @default(false) // Optional: track if email notification was sent successfully
+}
 
 model ChatMessage {
   id         Int      @id @default(autoincrement())

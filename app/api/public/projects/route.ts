@@ -4,14 +4,15 @@ import prisma from "@/lib/prisma";
 export async function GET() {
     try {
         const projects = await prisma.project.findMany({
-            orderBy: [
-                {
-                    featured: "desc",
+            orderBy: { createdAt: 'desc' },
+            include: {
+                desc: {
+                    include: {
+                        objectives: true
+                    }
                 },
-                {
-
-                },
-            ],
+                comments: true
+            }
         });
         return NextResponse.json(projects);
     } catch (error) {

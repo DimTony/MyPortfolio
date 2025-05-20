@@ -1,6 +1,7 @@
 // This is a server-side API route - /app/api/projects/[id]/comments/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
+import { getRandomString } from '@/lib/utils';
 
 // Define the params type for dynamic route
 interface RouteParams {
@@ -19,7 +20,7 @@ interface CommentData {
 // Get comments for a specific project
 export async function GET(
   request: NextRequest, 
-  { params }: RouteParams
+  { params }: any
 ): Promise<NextResponse> {
   try {
     const id = parseInt(params.id);
@@ -50,7 +51,7 @@ export async function GET(
 // Add a comment to a project
 export async function POST(
   request: NextRequest, 
-  { params }: RouteParams
+  { params }: any
 ): Promise<NextResponse> {
   try {
     const id = parseInt(params.id);
@@ -74,7 +75,7 @@ export async function POST(
       data: {
         projectId: id,
         authorName: data.authorName,
-        authorEmail: data.authorEmail || "",
+        avatarUrl: getRandomString(),
         content: data.content,
         isApproved: false, // Default to false, admin needs to approve
       }

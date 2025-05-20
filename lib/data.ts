@@ -2,6 +2,7 @@
 
 // This file contains data fetching functions that can be imported in client components
 import prisma from "@/lib/prisma";
+import { getRandomString } from "./utils";
 
 // Get all projects with their related data
 export async function getProjects() {
@@ -60,13 +61,17 @@ export async function getProjectById(id: number) {
 
 // Add a comment to a project
 export async function addComment(projectId: number, authorName: string, authorEmail: string, content: string) {
+      const avatarUrl = getRandomString();
+  
+
   try {
     const comment = await prisma.comment.create({
       data: {
         projectId,
         authorName,
-        authorEmail,
+        avatarUrl,
         content,
+        isApproved: false
         // Set isApproved based on your requirements - false by default in schema
       }
     });

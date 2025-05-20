@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(cuid())
+  username String @unique
+  password String // This will store a hashed password
+}
+
+model Project {
+  id             Int               @id @default(autoincrement())
+  title          String
+  description    String
+  technologies   String          // Stored as JSON
+  role           String
+  dash           String
+  thumbnail      String
+  releaseStatus  String
+  maintainStatus String
+  date           String
+  githubUrl      String?  
+  demoUrl        String?
+  createdAt      DateTime          @default(now())
+
+  desc           ProjectDescription? @relation(fields: [descId], references: [id])
+  descId         Int?                @unique
+
+  comments       Comment[]
+
+  @@map("Projects")
+}
+
+model ThinkTank {
+  id             Int       @id @default(autoincrement())
+  title          String
+  description    String
+  technologies   String    // JSON string, like in Project
+  role           String
+  dash           String
+  thumbnail      String
+  releaseStatus  String
+  maintainStatus String
+  date           String
+  githubUrl      String?
+  demoUrl        String?
+  createdAt      DateTime  @default(now())
+
+  desc           ProjectDescription? @relation(fields: [descId], references: [id])
+  descId         Int?                @unique
+
+  comments       ThinkTankComment[]
+
+  @@map("ThinkTanks")
+}
+
+
+model ProjectDescription {
+  id          Int         @id @default(autoincrement())
+  title       String
+  summary     String
+  footer      String
+
+  objectives  Objective[]
+  project     Project?     // ✅ Removed fields/references — inverse of the 1:1 relation
+  thinktank   ThinkTank?     // ✅ Removed fields/references — inverse of the 1:1 relation
+  // projectId  Int        // ❌ Not needed here
+
+  @@map("ProjectDescriptions")
+}
+
+model Objective {
+  id             Int                  @id @default(autoincrement())
+  text           String
+  description    ProjectDescription   @relation(fields: [descriptionId], references: [id])
+  descriptionId  Int
+
+  @@map("Objectives")
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  authorName  String
+  avatarUrl   String @default("/images/user1.svg") 
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   Int
+
+  @@map("Comments")
+}
+
+model ThinkTankComment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  authorName  String
+  avatarUrl   String @default("/images/user2.svg") 
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  thinkTank   ThinkTank @relation(fields: [thinkTankId], references: [id])
+  thinkTankId Int
+}
+
+
+
+model ChatMessage {
+  id         Int      @id @default(autoincrement())
+  content    String
+  guestName  String?
+  sessionId  String
+  isFromAdmin Boolean
+  createdAt  DateTime @default(now())
+}

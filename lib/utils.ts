@@ -50,3 +50,28 @@ export function formatToMonthYear(dateStr: string): string {
 
   return date.toLocaleDateString("en-US", options);
 }
+
+export function safeFormatDate(dateStr?: string) {
+  if (!dateStr) return "No date";
+  const date = new Date(dateStr);
+  return isNaN(date.getTime()) ? "Invalid date" : date.toLocaleDateString();
+}
+
+export function formatDateToMonthYear(dateString: string): string {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short' };
+  return date.toLocaleDateString('en-US', options);
+}
+
+
+export function getRandomString(): string {
+        const options = [
+            "/images/user1.svg",
+            "/images/user2.svg",
+            "/images/user3.svg",
+            "/images/user1.svg",
+            "/images/user2.svg",
+        ];
+        const randomIndex = Math.floor(Math.random() * options.length);
+        return options[randomIndex];
+    }

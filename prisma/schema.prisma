@@ -67,9 +67,9 @@ model ProjectDescription {
   footer      String
 
   objectives  Objective[]
-  project     Project?     // ✅ Removed fields/references — inverse of the 1:1 relation
-  thinktank   ThinkTank?     // ✅ Removed fields/references — inverse of the 1:1 relation
-  // projectId  Int        // ❌ Not needed here
+  project     Project?    
+  thinktank   ThinkTank?  
+ 
 
   @@map("ProjectDescriptions")
 }
